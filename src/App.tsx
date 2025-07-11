@@ -1,9 +1,20 @@
+import React, { Suspense } from "react";
 import { Route } from "react-router-dom";
 import { Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage/HomePage";
-import SearchPage from "./pages/SearchPage/SearchPage";
-import AppLayout from "./layout/AppLayout";
 import "./App.css";
+import LoadingSpinner from "./common/components/LoadingSpinner/LoadingSpinner";
+const AppLayout = React.lazy(() => import("./layout/AppLayout"));
+const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
+const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
+const SearchWithKeywordPage = React.lazy(
+  () => import("./pages/SearchWithKeywordPage/SearchWithKeywordPage")
+);
+const PlaylistPage = React.lazy(
+  () => import("./pages/PlaylistPage/PlaylistPage")
+);
+const PlaylistDetailPage = React.lazy(
+  () => import("./pages/PlaylistDetailPage/PlaylistDetailPage")
+);
 
 // 0. 사이드 바 있어야함 (플레이리스트, 메뉴)
 // 1. 홈페이지  /
@@ -14,21 +25,23 @@ import "./App.css";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<AppLayout />}>
-        <Route index element={<HomePage />} />
+    <Suspense fallback={<LoadingSpinner />}>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<HomePage />} />
 
-        <Route path="search">
-          <Route index element={<SearchPage />} />
-          {/* <Route path=":keyword" element={<SearchWithKeywordPage />} /> */}
+          <Route path="search">
+            <Route index element={<SearchPage />} />
+            <Route path=":keyword" element={<SearchWithKeywordPage />} />
+          </Route>
+
+          <Route path="playlist">
+            <Route index element={<PlaylistPage />} />
+            <Route path=":id" element={<PlaylistDetailPage />} />
+          </Route>
         </Route>
-
-        {/* <Route path="playlist">
-          <Route index element={<PlaylistPage />} />
-          <Route path=":id" element={<PlaylistDetailPage />} />
-        </Route> */}
-      </Route>
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 }
 
