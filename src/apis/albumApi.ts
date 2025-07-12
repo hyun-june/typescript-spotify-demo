@@ -14,6 +14,7 @@ export const getNewReleases = async (
         },
       }
     );
+
     return response.data;
   } catch (error) {
     throw new Error("fail to fetch new releases");

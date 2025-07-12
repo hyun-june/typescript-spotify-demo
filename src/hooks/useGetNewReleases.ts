@@ -14,3 +14,5 @@ const useGetNewReleases = () => {
     },
   });
 };
+
+export default useGetNewReleases;

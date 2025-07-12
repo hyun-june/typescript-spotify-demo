@@ -3,6 +3,12 @@ import { clientId, clientSecret } from "../configs/authConfig";
 import { ClientCredentialTokenResponse } from "../models/auth";
 
 const encodedBase64 = (data: string): string => {
+  if (typeof window !== "undefined") {
+    // 브라우저 환경
+
+    return btoa(data);
+  }
+  // Node.js 환경
   return Buffer.from(data).toString("base64");
 };
 
@@ -24,6 +30,7 @@ export const getClientCredentialToken =
           },
         }
       );
+
       return response.data;
     } catch (error) {
       throw new Error("Fail to fetch credential token");
