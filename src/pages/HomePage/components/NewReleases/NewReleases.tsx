@@ -15,6 +15,7 @@ const NewReleases = () => {
   if (error) {
     return <ErrorMessage errorMessage={error.message} />;
   }
+
   return (
     <div>
       <Typography variant="h1" paddingTop="8px">
