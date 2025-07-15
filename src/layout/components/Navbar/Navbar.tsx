@@ -1,7 +1,11 @@
 import { Box } from "@mui/material";
 import LoginButton from "../../../common/components/LoginButton/LoginButton";
+import useGetCurrentUserProfile from "../../../hooks/useGetCurrentUserProfile";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Navbar = () => {
+  const { data: userProfile } = useGetCurrentUserProfile();
+
   return (
     <Box
       display="flex"
@@ -9,7 +13,15 @@ const Navbar = () => {
       alignItems="center"
       height="64px"
     >
-      <LoginButton />
+      {userProfile ? (
+        userProfile.images.length > 0 ? (
+          <img src={userProfile.images[0]?.url} />
+        ) : (
+          <AccountCircleIcon />
+        )
+      ) : (
+        <LoginButton />
+      )}
     </Box>
   );
 };
