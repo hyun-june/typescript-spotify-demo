@@ -1,10 +1,10 @@
 import React, { Suspense, useEffect } from "react";
 import { Route } from "react-router-dom";
 import { Routes } from "react-router-dom";
-import "./App.css";
 import LoadingSpinner from "./common/components/LoadingSpinner/LoadingSpinner";
-import { CLIENT_ID } from "./configs/authConfig";
 import { useExchangeToken } from "./hooks/useExchangeToken";
+import "./App.css";
+
 const AppLayout = React.lazy(() => import("./layout/AppLayout"));
 const HomePage = React.lazy(() => import("./pages/HomePage/HomePage"));
 const SearchPage = React.lazy(() => import("./pages/SearchPage/SearchPage"));
