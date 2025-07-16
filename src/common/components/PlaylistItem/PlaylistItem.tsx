@@ -7,27 +7,61 @@ import {
   Typography,
 } from "@mui/material";
 
-const PlaylistItemContainer = styled(ListItemButton)({});
+const PlayListItemContainer = styled(ListItemButton)(({ theme, selected }) => ({
+  padding: "8px",
+  alignItems: "center",
+  borderRadius: "8px",
+  backgroundColor: selected ? theme.palette.action.active : "",
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+const PlaylistAvatar = styled(Avatar)({
+  width: "48px",
+  height: "48px",
+  borderRadius: "8px",
+});
 
 const PlaylistName = styled(Typography)({
   fontWeight: "bold",
   color: "#1db954",
 });
 
-const PlaylistItem = ({ item }) => {
-  console.log("🚀 ~ PlaylistItem ~ item:", item);
+interface PlaylistItemProps {
+  image: string | null;
+  name: string;
+  artistName: string | null;
+  id: string;
+  handleClick: (id: string) => void;
+  selected?: boolean;
+}
+
+const PlaylistItem = ({
+  image,
+  name,
+  artistName,
+  id,
+  handleClick,
+  selected,
+}: PlaylistItemProps) => {
   return (
-    <PlaylistItemContainer>
+    <PlayListItemContainer
+      onClick={() => handleClick(id)}
+      selected={selected || false}
+    >
       <ListItemAvatar>
-        <Avatar src={item.images[0].url} />
+        {image ? <PlaylistAvatar src={image} alt={name} /> : "No image"}
       </ListItemAvatar>
-      <div>
-        <ListItemText
-          primary={<PlaylistName>{item.name}</PlaylistName>}
-          secondary={"Playlist •" + item.owner?.display_name}
-        />
-      </div>
-    </PlaylistItemContainer>
+      <ListItemText
+        primary={<PlaylistName>{name}</PlaylistName>}
+        secondary={
+          <Typography variant="body1" color="text.secondary">
+            {artistName}
+          </Typography>
+        }
+      />
+    </PlayListItemContainer>
   );
 };
 

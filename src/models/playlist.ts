@@ -21,9 +21,28 @@ export interface SimplifiedPlaylistObject {
   public?: boolean;
   snapshot_id?: string;
   tracks?: {
-    href: string;
-    total: number;
+    href?: string;
+    total?: number;
   };
   type?: string;
   uri?: string;
 }
+
+export interface GetPlaylistRequest {
+  playlist_id: string;
+  market?: string;
+  fields?: string;
+  additional_types?: string;
+}
+
+export interface IPlaylist {
+  href: string;
+  limit: number;
+  next: string | null;
+  offset: number;
+  previous: string | null;
+  total: number;
+  items: SimplifiedPlaylistObject[];
+}
+
+export type GetPlaylistResponse = SimplifiedPlaylistObject;
