@@ -1,8 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  GetPlaylistItemsRequest,
-  GetPlaylistItemsResponse,
-} from "../models/playlist";
+import { GetPlaylistItemsRequest } from "../models/playlist";
 import { getPlaylistItems } from "../apis/playlistApi";
 
 const useGetPlaylistItems = (params: GetPlaylistItemsRequest) => {

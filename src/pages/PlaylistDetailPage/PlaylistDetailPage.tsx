@@ -21,6 +21,9 @@ import { PAGE_LIMIT } from "../../configs/commonConfig";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import LoadingSpinner from "../../common/components/LoadingSpinner/LoadingSpinner";
+import ErrorMessage from "../../common/components/ErrorMessage/ErrorMessage";
+import LoginButton from "../../common/components/LoginButton/LoginButton";
+import EmptyPlaylistWithSearch from "./components/EmptyPlaylistWithSearch";
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   background: theme.palette.background.paper,
@@ -73,8 +76,14 @@ const ResponsiveTypography = styled(Typography)(({ theme }) => ({
 const PlaylistDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   if (id === undefined) return <Navigate to="/" />;
-  const { data: playlist } = useGetPlaylist({ playlist_id: id });
-  console.log("🚀 ~ PlaylistDetailPage ~ playlist:", playlist);
+  const {
+    data: playlist,
+    error: playlistError,
+    isLoading: isPlaylistLoading,
+  } = useGetPlaylist({
+    playlist_id: id,
+  });
+
   const {
     data: playlistItems,
     isLoading: isPlaylistItemsLoading,
@@ -83,8 +92,10 @@ const PlaylistDetailPage = () => {
     isFetchingNextPage,
     fetchNextPage,
   } = useGetPlaylistItems({ playlist_id: id, limit: PAGE_LIMIT });
-  console.log("🚀 ~ PlaylistDetailPage ~ PAGE_LIMIT:", PAGE_LIMIT);
-  console.log("🚀 ~ PlaylistDetailPage ~ playlistItems:", playlistItems);
+  console.log(
+    "🚀 ~ PlaylistDetailPage ~ playlistItemsError:",
+    playlistItemsError
+  );
 
   const [ref, inView] = useInView();
   useEffect(() => {
@@ -92,10 +103,32 @@ const PlaylistDetailPage = () => {
       fetchNextPage();
     }
   }, [inView]);
+
+  if (isPlaylistItemsLoading || isPlaylistLoading) return <LoadingSpinner />;
+
+  if (playlistItemsError || playlistError) {
+    if (playlistItemsError?.response?.status === 401) {
+      return (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          flexDirection="column"
+        >
+          <Typography variant="h2" fontWeight={700} mb="20px">
+            다시 로그인 하세요
+          </Typography>
+          <LoginButton />
+        </Box>
+      );
+    }
+    return <ErrorMessage errorMessage="Failed to load" />;
+  }
   return (
     <StyledTableContainer>
       <PlaylistHeader container spacing={7}>
-        <ImageGrid item sm={12} md={10}>
+        <ImageGrid>
           {playlist?.images ? (
             <AlbumImage src={playlist?.images[0].url} />
           ) : (
@@ -104,7 +137,7 @@ const PlaylistDetailPage = () => {
             </DefaultImage>
           )}
         </ImageGrid>
-        <Grid item sm={12} md={10}>
+        <Grid>
           <Box>
             <ResponsiveTypography variant="h1" color="white">
               {playlist?.name}
@@ -133,7 +166,7 @@ const PlaylistDetailPage = () => {
         </Grid>
       </PlaylistHeader>
       {playlist?.tracks?.total === 0 ? (
-        <Typography>써치</Typography>
+        <EmptyPlaylistWithSearch />
       ) : (
         <Table>
           <TableHead>
@@ -157,9 +190,9 @@ const PlaylistDetailPage = () => {
                 );
               })
             )}
+            <TableRow sx={{ height: "5px" }} ref={ref} />
+            {isFetchingNextPage && <LoadingSpinner />}
           </TableBody>
-          <TableRow sx={{ height: "5px" }} ref={ref} />
-          {isFetchingNextPage && <LoadingSpinner />}
         </Table>
       )}
     </StyledTableContainer>
