@@ -17,6 +17,11 @@ export interface Followers {
   total?: number;
 }
 
+export interface CopyrightObject {
+  text?: string;
+  type?: string;
+}
+
 export interface ExplicitContent {
   filter_enabled?: boolean;
   filter_locked?: boolean;
