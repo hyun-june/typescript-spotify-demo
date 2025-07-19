@@ -59,6 +59,8 @@ export interface Episode {
   show: Show;
 }
 
+export type SimplifiedEpisode = Omit<Episode, "show">;
+
 export interface Show {
   available_markets: string[];
   copyrights: CopyrightObject[];
@@ -77,4 +79,30 @@ export interface Show {
   type: "show";
   uri: string;
   total_episodes: number;
+}
+
+export interface SimplifiedAudiobook {
+  authors: {
+    name: string;
+  }[];
+  available_markets: string[];
+  copyrights: CopyrightObject;
+  description: string;
+  html_description: string;
+  edition?: string;
+  explicit: boolean;
+  external_urls: ExternalUrls;
+  href: string;
+  id: string;
+  images: Image[];
+  languages: string[];
+  media_type: string;
+  name: string;
+  narrators: {
+    name: string;
+  }[];
+  publisher: string;
+  type: "audiobook";
+  uri: string;
+  total_chapters: number;
 }

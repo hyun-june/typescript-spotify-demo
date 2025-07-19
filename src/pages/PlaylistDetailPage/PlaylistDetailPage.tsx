@@ -34,8 +34,8 @@ const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   "&::-webkit-scrollbar": {
     display: "none",
   },
-  msOverflowStyle: "none", // IE and Edge
-  scrollbarWidth: "none", // Firefox
+  msOverflowStyle: "none",
+  scrollbarWidth: "none",
 }));
 
 const PlaylistHeader = styled(Grid)({
@@ -92,17 +92,13 @@ const PlaylistDetailPage = () => {
     isFetchingNextPage,
     fetchNextPage,
   } = useGetPlaylistItems({ playlist_id: id, limit: PAGE_LIMIT });
-  console.log(
-    "🚀 ~ PlaylistDetailPage ~ playlistItemsError:",
-    playlistItemsError
-  );
 
   const [ref, inView] = useInView();
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView]);
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   if (isPlaylistItemsLoading || isPlaylistLoading) return <LoadingSpinner />;
 
