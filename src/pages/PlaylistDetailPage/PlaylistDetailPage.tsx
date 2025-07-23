@@ -12,8 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import theme from "./../../theme";
-import { Box, maxWidth } from "@mui/system";
+import { Box } from "@mui/system";
 import DefaultImage from "../../common/components/DefaultImage/DefaultImage";
 import useGetPlaylistItems from "../../hooks/useGetPlaylistItems";
 import DesktopPlaylistItem from "./components/DesktopPlaylistItem";

@@ -1,4 +1,6 @@
+import { isAxiosError } from "axios";
 import {
+  AddPlaylistRequest,
   CreatePlaylistRequest,
   GetCurrentUserPlaylistRequest,
   GetCurrentUserPlaylistResponse,
@@ -40,12 +42,13 @@ export const getPlaylistItems = async (
   params: GetPlaylistItemsRequest
 ): Promise<GetPlaylistItemsResponse> => {
   try {
-    const response = await api.get(`/playlists/${params.playlist_id}/tracks`, {
+    const response = await api.get(`/playlists/${params.playlist_id}/tracks1`, {
       params,
     });
     return response.data;
   } catch (error) {
     // throw new Error("Fail to fetch playlist items");
+
     throw error;
   }
 };
@@ -65,5 +68,20 @@ export const createPlaylist = async (
     return response.data;
   } catch (error) {
     throw new Error("Fail to create playlist");
+  }
+};
+
+export const addPlaylist = async (
+  params: AddPlaylistRequest
+): Promise<{ snapshot_id: string }> => {
+  try {
+    const { playlist_id, uris, position } = params;
+    const response = await api.post(`/playlists/${playlist_id}/tracks`, {
+      uris,
+      position,
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Fail to add playlist");
   }
 };

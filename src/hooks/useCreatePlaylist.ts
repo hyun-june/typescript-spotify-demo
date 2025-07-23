@@ -9,14 +9,14 @@ const useCreatePlaylist = () => {
 
   return useMutation({
     mutationFn: (params: CreatePlaylistRequest) => {
-      if (user) {
-        return createPlaylist(user.id, params);
+      if (!user || !user.id) {
+        return Promise.reject(new Error("user is not defined"));
       }
-      return Promise.reject(new Error("user is not defined"));
+
+      return createPlaylist(user.id, params);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["current-user-playlists"] });
-      console.log("성공");
     },
   });
 };
