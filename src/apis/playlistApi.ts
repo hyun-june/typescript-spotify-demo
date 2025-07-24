@@ -42,7 +42,7 @@ export const getPlaylistItems = async (
   params: GetPlaylistItemsRequest
 ): Promise<GetPlaylistItemsResponse> => {
   try {
-    const response = await api.get(`/playlists/${params.playlist_id}/tracks1`, {
+    const response = await api.get(`/playlists/${params.playlist_id}/tracks`, {
       params,
     });
     return response.data;

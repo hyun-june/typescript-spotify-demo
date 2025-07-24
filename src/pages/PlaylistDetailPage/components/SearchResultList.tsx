@@ -12,11 +12,8 @@ import {
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import LoadingSpinner from "../../../common/components/LoadingSpinner/LoadingSpinner";
-
 import { useParams } from "react-router";
 import useAddplaylist from "../../../hooks/useAddPlaylist";
-
-import ErrorMessage from "../../../common/components/ErrorMessage/ErrorMessage";
 
 interface SearchResultListProps {
   list: Track[];
@@ -59,9 +56,7 @@ const SearchResultList = ({
 
   const handleAddPlaylist = (track: Track) => {
     if (!id) return;
-
     addPlaylist({ playlist_id: id, uris: [track.uri], position: 0 });
-    console.log("🚀 ~ handleAddPlaylist ~ track:", track);
   };
 
   return (
