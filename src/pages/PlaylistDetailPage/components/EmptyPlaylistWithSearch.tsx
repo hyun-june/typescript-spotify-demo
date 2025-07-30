@@ -47,8 +47,9 @@ const EmptyPlaylistWithSearch = () => {
     type: [SEARCH_TYPE.Track],
   });
 
-  const handleSearchKeyword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(event.target.value);
+  const handleSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e) return;
+    setKeyword(e.target.value);
   };
   const tracks = data?.pages.flatMap((page) => page.tracks?.items ?? []) ?? [];
   const hasResults = tracks.length > 0;
@@ -60,7 +61,7 @@ const EmptyPlaylistWithSearch = () => {
       </Typography>
       <StyledTextField
         value={keyword}
-        onChange={() => handleSearchKeyword(event)}
+        onChange={handleSearchKeyword}
         autoComplete="off"
         variant="outlined"
         placeholder="Search for songs or episodes"

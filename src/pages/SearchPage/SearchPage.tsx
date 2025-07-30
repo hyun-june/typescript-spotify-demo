@@ -1,5 +1,16 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  InputAdornment,
+  styled,
+  TextField,
+  Typography,
+} from "@mui/material";
 import SearchCategoryCard from "./components/SearchCategoryCard";
+import SearchIcon from "@mui/icons-material/Search";
+import { useRef, useState } from "react";
+import useSearchItemsByKeyword from "../../hooks/useSearchItemsByKeyword";
+import { SEARCH_TYPE } from "../../models/search";
+import { useNavigate } from "react-router";
 
 const category = {
   playlist: {
@@ -94,9 +105,83 @@ const colorList = [
   "#fef3bd",
   "#b5ead7",
 ];
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  width: "100%",
+  position: "absolute",
+  top: "22px",
+
+  "& .MuiInputBase-root": {
+    borderRadius: "30px",
+    backgroundColor: theme.palette.action.active,
+    color: "white",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "transparent",
+    },
+    "&:hover fieldset": {
+      borderColor: "gray",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "gray",
+    },
+  },
+}));
+
 const SearchPage = () => {
+  const [keyword, setKeyword] = useState<string>("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+  const { data } = useSearchItemsByKeyword({
+    q: keyword,
+    type: [SEARCH_TYPE.Track],
+  });
+
+  const handleSearchKeyword = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      const value = inputRef.current?.value.trim();
+      if (!value) return;
+      setKeyword(value);
+      navigate(`/search/${value}`);
+    }
+  };
+
+  const shuffleArray = (arr: [string, { label: string; img: string }][]) => {
+    const array = [...arr];
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  const categoryArray = Object.entries(category);
+
+  const randomCategory = shuffleArray(categoryArray).slice(0, 9);
+
+  const tracks = data?.pages.flatMap((page) => page.tracks?.items ?? []) ?? [];
+  console.log("🚀 ~ SearchPage ~ tracks:", tracks);
+
   return (
     <Box>
+      <StyledTextField
+        placeholder="What do you want to play?"
+        sx={{ width: "30%" }}
+        onKeyDown={handleSearchKeyword}
+        inputRef={inputRef}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon style={{ color: "white" }} />
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
       <Typography variant="h1" my="10px">
         Browse all
       </Typography>
@@ -107,7 +192,7 @@ const SearchPage = () => {
           gap: "1em",
         }}
       >
-        {Object.entries(category).map(([key, value]) => {
+        {randomCategory.map(([key, value]) => {
           const randomColor =
             colorList[Math.floor(Math.random() * colorList.length)];
           return (
